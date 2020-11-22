@@ -5,7 +5,7 @@ import { createSelector } from 'reselect';
 import { Grid, Button } from '@freecodecamp/react-bootstrap';
 import Helmet from 'react-helmet';
 
-import { apiLocation } from '../../config/env.json';
+import { apiLocation, homeLocation } from '../../config/env.json';
 import {
   signInLoadingSelector,
   userSelector,
@@ -15,7 +15,7 @@ import {
 import { submitNewAbout, updateUserFlag, verifyCert } from '../redux/settings';
 import { createFlashMessage } from '../components/Flash/redux';
 
-import { FullWidthRow, Link, Loader, Spacer } from '../components/helpers';
+import { FullWidthRow, Loader, Spacer } from '../components/helpers';
 import About from '../components/settings/About';
 import Privacy from '../components/settings/Privacy';
 import Email from '../components/settings/Email';
@@ -113,11 +113,6 @@ const mapDispatchToProps = {
   verifyCert
 };
 
-const createHandleSignoutClick = navigate => e => {
-  e.preventDefault();
-  return navigate(`${apiLocation}/signout`);
-};
-
 export function ShowSettings(props) {
   const {
     createFlashMessage,
@@ -172,30 +167,23 @@ export function ShowSettings(props) {
   }
 
   if (!isSignedIn) {
-    navigate(`${apiLocation}/signin?returnTo=settings`);
+    navigate(`${apiLocation}/signin?returnTo=${homeLocation}/settings`);
     return <Loader fullScreen={true} />;
   }
 
   return (
     <Fragment>
-      <Helmet title='Settings | freeCodeCamp.org'></Helmet>
+      <Helmet title='Settings | freeCodeCamp.org' />
       <Grid>
         <main>
           <Spacer size={2} />
-          <FullWidthRow className='button-group'>
-            <Link
-              className='btn-invert btn btn-lg btn-primary btn-block'
-              to={`/${username}`}
-            >
-              Show me my public portfolio
-            </Link>
+          <FullWidthRow>
             <Button
               block={true}
               bsSize='lg'
               bsStyle='primary'
               className='btn-invert'
-              href={'/signout'}
-              onClick={createHandleSignoutClick(navigate)}
+              href={`${apiLocation}/signout`}
             >
               Sign me out of freeCodeCamp
             </Button>
